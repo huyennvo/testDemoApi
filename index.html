@@ -417,6 +417,11 @@ input,textarea{font:inherit;color:inherit}
 #btnClaude .ic,#paneClaude .phead .pt .ic{color:#d97757}
 #btnClaude.active .ic{color:#e9906f}
 
+/* Nút Mode được khuyên dùng */
+.modebar .btn.rec{flex-direction:column;gap:0;line-height:1.2;background:var(--btn);border:2px solid #4fa3e0;box-shadow:0 0 0 3px rgba(55,148,255,.28)}
+.modebar .btn.rec small{font-size:14px;font-weight:700;color:#cfe8ff;letter-spacing:.2px}
+.modebar{padding-bottom:8px}
+
 </style>
 </head>
 <body>
@@ -1641,6 +1646,8 @@ const CONFIG = {
     correct: ['a', 'mode a', 'theo khuyến nghị'],   // so khớp không phân biệt hoa thường và dấu
     wrong: ['d', 'mode d'],
     buttons: ['Mode A', 'Mode D'],
+    recommended: 0,                    // vị trí nút được làm nổi bật (0 = Mode A); đặt -1 để không nổi bật
+    recommendText: 'Khuyên dùng',
     unclearText: [
       'Mình chưa rõ bạn chọn mode nào. Hãy chọn **Mode A** hoặc **Mode D** (hoặc trả lời “theo khuyến nghị”).'
     ]
@@ -3277,7 +3284,9 @@ function renderChrome() {
   const mb = $('#modeBar');
   if (S.f.claude && !playing && st === ST.MODE) {
     mb.className = 'modebar on';
-    mb.innerHTML = CONFIG.modeChoice.buttons.map(x => '<button type="button" class="btn ghost" data-mode="' + esc(x) + '">' + esc(x) + '</button>').join('');
+    mb.innerHTML = CONFIG.modeChoice.buttons.map((x, i) => i === CONFIG.modeChoice.recommended
+      ? '<button type="button" class="btn rec" data-mode="' + esc(x) + '"><span>' + esc(x) + '</span><small>' + esc(CONFIG.modeChoice.recommendText) + '</small></button>'
+      : '<button type="button" class="btn ghost" data-mode="' + esc(x) + '">' + esc(x) + '</button>').join('');
   } else { mb.className = 'modebar'; mb.innerHTML = ''; }
   const cin = $('#claudeIn');
   cin.disabled = !S.f.claude; $('#claudeGo').disabled = !S.f.claude;
